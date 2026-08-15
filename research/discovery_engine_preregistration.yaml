@@ -1,0 +1,85 @@
+experiment_id: DE-001
+status: preregistered
+question: >-
+  Does explicit assumption plus contradiction mapping improve research-hypothesis quality
+  over the same model using conventional literature-grounded reasoning?
+
+hypotheses:
+  null: >-
+    There is no meaningful improvement after matching model, corpus, task, and tool budget.
+  alternative: >-
+    The contradiction-driven pipeline improves one or more pre-registered primary metrics
+    under matched resource budgets and retains the gain on held-out questions.
+
+arms:
+  baseline:
+    id: A
+    description: Conventional literature-grounded research agent.
+  discovery_engine:
+    id: B
+    description: >-
+      Agent with explicit observation extraction, assumption graph, contradiction/unknown
+      detection, competing-hypothesis generation, discriminating-test design, evidence
+      retrieval, and hypothesis ranking.
+
+controls:
+  model: identical_between_arms
+  corpus: identical_between_arms
+  time_cutoff: identical_between_arms
+  tool_budget: identical_between_arms
+  token_budget: matched_as_closely_as_practical
+  questions: identical_between_arms
+  order: randomized
+  evaluator_blinding: preferred
+
+sample:
+  pilot_questions: 20
+  target_questions: 50
+  domains: [computer_science, biology, physics, economics]
+  held_out_fraction: 0.2
+
+primary_metrics:
+  - name: novelty_adjusted_hypothesis_quality
+    direction: higher_is_better
+  - name: falsifiability_rate
+    direction: higher_is_better
+  - name: evidence_grounding
+    direction: higher_is_better
+
+secondary_metrics:
+  - contradiction_detection_precision
+  - contradiction_detection_recall
+  - assumption_coverage
+  - useful_hypotheses_per_question
+  - known_idea_rediscovery_rate
+  - calibration_error
+  - latency_seconds
+  - token_cost
+  - tool_calls
+
+analysis:
+  paired_comparison: true
+  report_effect_size: true
+  report_confidence_intervals: true
+  preserve_negative_results: true
+  no_posthoc_metric_substitution: true
+
+falsification_rules:
+  - improvement_absent_on_primary_metrics
+  - improvement_explained_by_unmatched_compute_or_tools
+  - gain_disappears_on_held_out_questions
+  - contradiction_false_positive_cost_offsets_gain
+
+novelty_policy:
+  - never_claim_discovery_without_external_validation
+  - distinguish_new_to_model_from_new_to_literature
+  - record source ids for novelty judgments
+
+artifacts:
+  - questions.jsonl
+  - runs.jsonl
+  - hypotheses.jsonl
+  - evidence.jsonl
+  - evaluations.jsonl
+  - analysis.csv
+  - final_report.md
