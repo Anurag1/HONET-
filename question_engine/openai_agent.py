@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
 from pydantic import BaseModel, Field
 from agents import Agent, Runner
 
@@ -31,4 +34,30 @@ DISCOVERY_AGENT = Agent(
 def generate_questions(observations: str) -> DiscoveryBatch:
     """Run the question engine through the OpenAI Agents SDK."""
     result = Runner.run_sync(DISCOVERY_AGENT, observations)
+    return result.final_output
+
+
+def generate_questions_from_image(image_path: str) -> DiscoveryBatch:
+    """Send a local notebook image through the Responses-format multimodal input."""
+    data = base64.b64encode(Path(image_path).read_bytes()).decode("ascii")
+    input_items = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "input_text",
+                    "text": (
+                        "Extract the important observations from this notebook image, "
+                        "then generate high-value cross-domain research questions. "
+                        "Do not treat uncertain handwriting as fact."
+                    ),
+                },
+                {
+                    "type": "input_image",
+                    "image_url": f"data:image/jpeg;base64,{data}",
+                },
+            ],
+        }
+    ]
+    result = Runner.run_sync(DISCOVERY_AGENT, input_items)
     return result.final_output
