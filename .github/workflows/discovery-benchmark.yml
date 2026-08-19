@@ -1,0 +1,28 @@
+name: Discovery Benchmark
+
+on:
+  push:
+    paths:
+      - 'leonardo_ai/**'
+      - 'benchmarks/**'
+      - 'tests/test_discovery_benchmark.py'
+      - '.github/workflows/discovery-benchmark.yml'
+  pull_request:
+    paths:
+      - 'leonardo_ai/**'
+      - 'benchmarks/**'
+      - 'tests/test_discovery_benchmark.py'
+      - '.github/workflows/discovery-benchmark.yml'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -p 'test_discovery_benchmark.py' -v
+      - name: Run benchmark
+        run: python benchmarks/discovery_benchmark.py
