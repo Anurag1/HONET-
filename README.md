@@ -20,6 +20,71 @@ This approach combines the perfect memory of architectural methods with a practi
 
 ---
 
+## Leonardo-Inspired Knowledge Discovery Engine
+
+HONet now includes a dependency-free experimental reasoning loop inspired by recurring features of Leonardo da Vinci's documented working practice: **observe → record → decompose → measure → connect → question → hypothesize → predict → experiment → compare → revise → generalize → apply**.
+
+The implementation deliberately does **not** claim to reproduce Leonardo's cognition. It converts that historical workflow into an executable, testable control loop for AI research.
+
+### Loop
+
+```text
+OBSERVE → RECORD → DECOMPOSE → MEASURE → VISUALIZE
+   ↓
+CONNECT → QUESTION → HYPOTHESIZE → PREDICT → EXPERIMENT
+   ↓
+COMPARE → REVISE → GENERALIZE → APPLY → OBSERVE
+```
+
+### Why it is different from a basic LLM call
+
+A normal generation pipeline can stop at:
+
+```text
+prompt → model → answer
+```
+
+The new experimental loop forces an explicit separation between:
+
+```text
+observation → hypothesis → prediction → evidence → revision
+```
+
+A hypothesis is therefore not silently promoted to fact. A failed prediction is retained as a contradiction that drives the next cycle.
+
+### Run it
+
+```bash
+python examples/leonardo_discovery_demo.py
+```
+
+### Test it
+
+```bash
+python -m unittest discover -s tests -p "test_leonardo_engine.py" -v
+```
+
+The GitHub Actions workflow `Leonardo Discovery Engine` runs both the unit tests and deterministic discovery demonstration on changes to the new engine.
+
+### New components
+
+```text
+leonardo_ai/
+├── __init__.py
+└── engine.py
+
+examples/
+└── leonardo_discovery_demo.py
+
+tests/
+└── test_leonardo_engine.py
+
+.github/workflows/
+└── leonardo-discovery.yml
+```
+
+---
+
 ## Strong Proof of Capabilities
 
 ### 1. Zero Catastrophic Forgetting
@@ -78,19 +143,27 @@ Output images will be saved to `strong_evidence_output/`.
 
 ## Repository Structure
 
-```
+```text
 HONet/
 ├── honet/
 │   ├── __init__.py          # Package exports
 │   ├── octaves.py           # ImageOctave, TabularOctave, SequentialOctave (CVAEs)
 │   ├── distiller.py         # MasterToneProducer & distillation pipeline
 │   └── data_factory.py      # Task DataLoader factories
+├── leonardo_ai/
+│   ├── __init__.py          # Discovery engine exports
+│   └── engine.py            # Observation/hypothesis/experiment loop
+├── examples/
+│   └── leonardo_discovery_demo.py
+├── tests/
+│   └── test_leonardo_engine.py
+├── .github/workflows/
+│   └── leonardo-discovery.yml
 ├── data/
-│   └── cifar-10-batches-py/ # Auto-downloaded CIFAR-10 data
-├── live_output/             # Demo output images
-├── strong_evidence_output/  # Benchmark output images
-├── run_demo.py              # Multi-modal lifelong learning demo
-├── run_strong_evidence.py   # Rigorous Split CIFAR-10 benchmark
+├── live_output/
+├── strong_evidence_output/
+├── run_demo.py
+├── run_strong_evidence.py
 ├── requirements.txt
 └── README.md
 ```
@@ -103,7 +176,7 @@ HONet/
 
 Each `Octave` is a **Conditional Variational Autoencoder (CVAE)**:
 
-```
+```text
 Input x ──► [Encoder G-Net] ──► (μ, σ²) ──► z ~ N(μ, σ²)
                ▲                                    │
                │  Master-Tone I                     ▼
@@ -116,7 +189,7 @@ The conditioning on Master-Tone `I` allows each new Octave to build upon prior k
 
 After training each Octave, a lightweight `MasterToneProducer` is trained to compress the Octave's learned distribution into a single vector `I`. This vector is then passed as a conditioning signal to all future Octaves.
 
-```
+```text
 Trained Octave (frozen) ──► [MasterToneProducer] ──► I_new
                                                          │
                                                          ▼
