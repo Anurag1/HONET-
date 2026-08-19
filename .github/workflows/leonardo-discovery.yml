@@ -16,6 +16,9 @@ on:
       - ".github/workflows/leonardo-discovery.yml"
       - "README.md"
 
+env:
+  PYTHONPATH: .
+
 jobs:
   test:
     runs-on: ubuntu-latest
