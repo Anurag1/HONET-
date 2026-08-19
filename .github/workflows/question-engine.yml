@@ -14,4 +14,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -m pip install -r question_engine/requirements.txt
-      - run: PYTHONPATH=. pytest -q tests/test_question_engine.py
+      - run: PYTHONPATH=. pytest -q tests
