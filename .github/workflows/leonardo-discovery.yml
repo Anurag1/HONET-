@@ -7,12 +7,14 @@ on:
       - "examples/leonardo_discovery_demo.py"
       - "tests/test_leonardo_engine.py"
       - ".github/workflows/leonardo-discovery.yml"
+      - "README.md"
   pull_request:
     paths:
       - "leonardo_ai/**"
       - "examples/leonardo_discovery_demo.py"
       - "tests/test_leonardo_engine.py"
       - ".github/workflows/leonardo-discovery.yml"
+      - "README.md"
 
 jobs:
   test:
