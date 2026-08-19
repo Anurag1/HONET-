@@ -1,0 +1,28 @@
+name: Leonardo Discovery Engine
+
+on:
+  push:
+    paths:
+      - "leonardo_ai/**"
+      - "examples/leonardo_discovery_demo.py"
+      - "tests/test_leonardo_engine.py"
+      - ".github/workflows/leonardo-discovery.yml"
+  pull_request:
+    paths:
+      - "leonardo_ai/**"
+      - "examples/leonardo_discovery_demo.py"
+      - "tests/test_leonardo_engine.py"
+      - ".github/workflows/leonardo-discovery.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -p "test_leonardo_engine.py" -v
+      - name: Run live deterministic discovery demo
+        run: python examples/leonardo_discovery_demo.py
