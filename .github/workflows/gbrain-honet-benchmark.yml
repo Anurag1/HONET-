@@ -1,0 +1,20 @@
+name: GBrain x HONET Benchmark
+
+on:
+  push:
+    branches: [main, 'feat/gbrain-honet-discovery-benchmark']
+  pull_request:
+    branches: [main]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run benchmark
+        run: python examples/gbrain_honet_benchmark.py
+      - name: Run tests
+        run: python -m unittest tests/test_gbrain_honet_benchmark.py -v
