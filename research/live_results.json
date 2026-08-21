@@ -1,0 +1,13 @@
+{
+  "run_date": "2026-08-20",
+  "status": "instrumented_not_api_executed",
+  "input": "two notebook images from HONET product experiment",
+  "baseline": {"questions": null, "knowledge_gain": null},
+  "honet": {"questions": null, "knowledge_gain": null},
+  "validated_discoveries": [],
+  "notes": [
+    "Repository workflow and benchmark definition committed.",
+    "No OpenAI API key stored in repository.",
+    "Live model execution requires secure API-key configuration in the runtime."
+  ]
+}
